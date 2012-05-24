@@ -14,3 +14,28 @@ require 'lib/api.php';
 require 'lib/image.php';
 require 'lib/storage.php';
 
+IO::msg('News2Kindle - v.0.1');
+IO::msg('--------------------------------------------');
+IO::msg('https://github.com/jwest/news2kindle');
+IO::msg('');
+
+/*
+ * STATE 1 - Grab yours articles
+ * ----------------------------------
+ */
+
+
+/*
+ * STATE 2 - Prepare mobi from html
+ * ----------------------------------
+ */
+
+
+/*
+ * STATE 3 - Send by email to Kindle
+ * ----------------------------------
+ */
+
+
+IO::msg('');
+IO::msg('');
