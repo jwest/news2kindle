@@ -1,16 +1,21 @@
 <?php
+/**
+ * Simple output message and args prepared
+ *
+ * @author Jakub Westfalewski <jwest@jwest.pl>
+ */
 class IO {
 
-
+	/**
+	 * Max line height
+	 */
 	const COMMAND_LENGTH = 50;
-
 
 	/**
 	 * args for run screen
 	 * @var array
 	 */
 	protected static $args = array();
-
 
 	/**
 	 * Write on screen text line
@@ -21,7 +26,6 @@ class IO {
 	{
 		echo ( $broken_line ? "\n" : "" ) . $message;
 	}
-
 
 	/**
 	 * Write command for status
@@ -39,7 +43,6 @@ class IO {
 		self::msg( $message . ' ' . $output_whitespaces.' ' );
 	}
 
-
 	/**
 	 * Status - OK
 	 */
@@ -48,7 +51,6 @@ class IO {
 		$colored_string = "\033[1;37m" . "\033[42m" . ' OK ' . "\033[0m";
 		self::msg( $colored_string, FALSE );
 	}
-
 
 	/**
 	 * Status - Error
@@ -64,7 +66,6 @@ class IO {
 		}
 	}
 
-
 	/**
 	 * Get run args
 	 * @param string $name key config
@@ -72,9 +73,8 @@ class IO {
 	 */
 	public static function arg($name)
 	{
-
+		//@TODO
 	}
-
 
 	/**
 	 * Prepare args for script
@@ -82,7 +82,7 @@ class IO {
 	 */
 	public static function prepare_args($args)
 	{
-
+		//@TODO
 	}
 
 }
