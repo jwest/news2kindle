@@ -1,0 +1,16 @@
+<?php
+/**
+ * Send articles to kindle
+ * 3 states:
+ *   - grab articles
+ *   - preapre mobi format
+ *   - send to kindle via email
+ *
+ * @author Jakub Westfalewski <jwest@jwest.pl>
+ */ 
+
+require 'lib/io.php';
+require 'lib/api.php';
+require 'lib/image.php';
+require 'lib/storage.php';
+
