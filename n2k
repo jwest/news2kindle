@@ -20,6 +20,13 @@ IO::msg('https://github.com/jwest/news2kindle');
 IO::msg('');
 
 /*
+ * STATE 0 - Prepare objects
+ * ----------------------------------
+ */
+
+IO::prepare_args($argv); //preapre args
+
+/*
  * STATE 1 - Grab yours articles
  * ----------------------------------
  */

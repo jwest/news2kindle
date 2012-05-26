@@ -2,24 +2,24 @@
 
 class API {
 
-	public function __construct($login, $password)
-	{
+    public function __construct($login, $password)
+    {
 
-	}
+    }
 
-	public function get_items($limit)
-	{
+    public function get_items($limit)
+    {
 
-	}
+    }
 
-	public function set_as_read()
-	{
+    public function set_as_read()
+    {
 
-	}
+    }
 
-	private function _login($login, $password)
-	{
-		
-	}
+    private function _login($login, $password)
+    {
+        
+    }
 
 }
