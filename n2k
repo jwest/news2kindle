@@ -12,7 +12,7 @@
 require 'lib/utils.php';
 require 'lib/io.php';
 require 'lib/api.php';
-require 'lib/image.php';
+require 'lib/images.php';
 require 'lib/storage.php';
 require 'lib/readability.php';
 
@@ -34,6 +34,8 @@ IO::prepare_args($argv); //preapre args
  */
 try
 {
+    $storage = new Storage('static');
+
     IO::command('Login to Google Reader API');
     $api = new API(IO::arg('login'), IO::arg('password'));
     IO::ok();
@@ -53,7 +55,16 @@ try
 
         $ra = new Readability2($file_url_content, 'utf-8');
         $content = $ra->getContent();
-        $content = $content['content'];
+
+        //save article
+        $storage->add_content
+        (
+            Utils::prepare_id($item->id), 
+            mb_convert_encoding($item->title, 'HTML-ENTITIES', 'utf-8'), 
+            $content['content'], 
+            $item->alternate[0]->href, 
+            $item->origin
+        );
 
         IO::ok();
     }

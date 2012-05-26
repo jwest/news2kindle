@@ -21,4 +21,17 @@ class Utils
 
         return implode('/', $ar_url );
     }
+
+    /**
+     * Prepare ID for google rss article    
+     * @param string $id
+     * @return string
+     */
+    public static function prepare_id($id)
+    {
+        $char_in = array('/', '.', ',', ':');
+        $id = str_replace($char_in, '-', $id);
+        
+        return $id;
+    }
 }
