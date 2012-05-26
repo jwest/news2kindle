@@ -56,7 +56,7 @@ class Storage {
     {        
         $content = unserialize( $this->_get_file('info.dat') );
 
-        if( $content === NULL )
+        if( $content === FALSE )
         {
             $content = (object) array
             (
@@ -90,22 +90,22 @@ class Storage {
     {
         if ( $name === NULL )
         {
-            $image_name = (string) $this->_info['images_count'];
+            $image_name = (string) $this->_info->images_count;
                     
             for ($i=strlen($image_name); $i<6; $i++)
             {
                 $image_name = '0'.$image_name;
             }
 
-            $this->_info['images_count']++;
-            $this->_info['images'] = $image_name;
+            $this->_info->images_count++;
+            $this->_info->images[$this->_info->images_count] = $image_name;
 
             $name = $image_name;
         }
 
         $this->_save_file($name, $image);
 
-        return $name;
+        return $this->_default_dir . $this->_name . '/' . $name;
     }
 
     /**

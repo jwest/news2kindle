@@ -5,6 +5,8 @@
  */
 class Images {
 
+    const JPEG_QUALITY = 80;
+
     /**
      * Articles content
      * @var string
@@ -31,8 +33,8 @@ class Images {
     public function __construct(Storage $storage, $article_content)
     {
         $this->_storage = $storage;
-        $this->_content = $content;
-        $this->_images_from_content = $this->_get_images_from_content($content);
+        $this->_content = $article_content;
+        $this->_images_from_content = $this->_get_images_from_content($article_content);
     }
 
     /**
@@ -56,7 +58,8 @@ class Images {
     {
         foreach ( $this->_images_from_content as $n => $image )
         {
-
+            $image = $this->_get_image($image);
+            $this->_content = str_replace($image, '" recindex="'.(int)basename($image), $this->_content);
         }
 
         return $this->_content;
@@ -64,13 +67,52 @@ class Images {
 
     /**
      * Resize image
+     * @param string $file path
      * @param int $new_width max width
-     * @param int $new_height max height
      */
-    private function _resize($new_width, $new_height)
+    private function _resize($file, $new_width = 500)
     {
+        list($width, $height) = getimagesize($file);
+
+        $new_height = 0;
+
+        //setup the new size of the image
+        if( $width > $new_width )
+        {
+            $ratio = $height/$width;
+            $new_height = $new_width * $ratio;
+        }
+        else
+        {
+            $new_width = $width;
+            $new_height = $height;
+        }
+
+        // resample the image        
+        $new_image = imagecreatetruecolor($new_width, $new_height);        
         
+        $type = exif_imagetype ( $file );
+
+        switch ( $type )
+        {
+            case IMAGETYPE_JPEG:
+                $old_image = imagecreatefromjpeg($file);
+                imagecopyresampled($new_image, $old_image, 0, 0, 0, 0, $new_width, $new_height, $width, $height);
+                imagejpeg($new_image, $file, self::JPEG_QUALITY);
+                break;
+            case IMAGETYPE_PNG:
+                $old_image = imagecreatefrompng($file);
+                imagecopyresampled($new_image, $old_image, 0, 0, 0, 0, $new_width, $new_height, $width, $height);
+                imagepng($new_image, $file);
+                break;
+            case IMAGETYPE_GIF:
+                $old_image = imagecreatefromgif($file); 
+                imagecopyresampled($new_image, $old_image, 0, 0, 0, 0, $new_width, $new_height, $width, $height);
+                imagegif($new_image, $file);
+                break;
+        }
     }
+
 
     /**
      * Resize image
@@ -82,7 +124,10 @@ class Images {
 
         if ( $image_data !== false )
         {
-            $image_prefix_name = (string) self::$img_count;
+            $image_name = $this->_storage->save_image($image_data);
+            $this->_resize($image_name);
+
+            return $image_name;
         }
     }
 

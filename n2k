@@ -56,12 +56,15 @@ try
         $ra = new Readability2($file_url_content, 'utf-8');
         $content = $ra->getContent();
 
+        $images = new Images($storage, $content['content']);
+        $content = $images->convert();
+
         //save article
         $storage->add_content
         (
             Utils::prepare_id($item->id), 
             mb_convert_encoding($item->title, 'HTML-ENTITIES', 'utf-8'), 
-            $content['content'], 
+            $content, 
             $item->alternate[0]->href, 
             $item->origin
         );
