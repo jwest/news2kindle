@@ -15,7 +15,7 @@ class IO {
      * args for run screen
      * @var array
      */
-    protected static $args = array
+    protected static $_args = array
     (
         'login' => NULL,        //--login=accountName@gmail.com
         'password' => NULL,     //--password=PaSSw0rd1!
@@ -69,7 +69,7 @@ class IO {
 
         if ( $message !== NULL )
         {
-            self::msg( $message );            
+            self::msg( '  - ' . $message );            
         }
     }
 
@@ -80,13 +80,14 @@ class IO {
      */
     public static function arg($name)
     {
-        //@TODO
+        return self::$_args[$name];
     }
 
     /**
      * Prepare args for script
      * (from http://php.net/manual/en/features.commandline.php)
      * @param array $argv array
+     * @return bool success or error
      */
     public static function prepare_args($argv)
     {
@@ -137,7 +138,19 @@ class IO {
             }
         }
 
-        $this->_argv = self::_validate_args($out);
+        try
+        {
+            self::$_args = array_merge( self::$_args, self::_validate_args($out) );
+        }
+        catch(Exception $e)
+        {
+            self::error($e->getMessage());
+            return false;
+        }
+
+        self::ok();
+        
+        return true;
     }
 
     /**
@@ -148,16 +161,36 @@ class IO {
      */
     private static function _validate_args($args)
     {
-        foreach ($out as $key => $arg ) {
-            if(!isset(self::_argv[$key])){
-                self::error('Param "'.$key.'" is invalid!');
-                throw new Exception();
+        foreach ( $args as $key => $arg ) 
+        {
+            if ( strlen($key) === 1 )
+            {
+                foreach ( self::$_args as $keyA => $argA )
+                {
+                    if($keyA[0] === $key )
+                    {
+                        unset( $args[$key] );
+                        $args[$keyA] = $arg;
+                        $key = $keyA;
+                    }
+                }
+            }
+
+            if ( ! array_key_exists($key, self::$_args) )
+            {
+                throw new Exception('Param "'.$key.'" is invalid!');
             }
         }
 
-        foreach()
+        foreach ( self::$_args as $key => $arg )
+        {
+            if( self::$_args[$key] === NULL AND !array_key_exists($key, $args) )
+            {
+                throw new Exception('Param "'.$key.'" must be declared!');
+            }
+        }
 
-        self::ok();
+        return $args;
     }
 
 }
