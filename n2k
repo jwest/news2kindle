@@ -30,10 +30,21 @@ IO::prepare_args($argv); //preapre args
 $storage = new Storage('static');
 
 /*
- * STATE 1 - Grab yours articles
+ * HELP - help - show help
  * ----------------------------------
  */
-if ( IO::arg('state') & IO::STATE_1 )
+if ( IO::arg('help') )
+{
+    IO::msg('Help:');
+
+    return;
+}
+
+/*
+ * STATE 1 - grab - Grab yours articles
+ * ----------------------------------
+ */
+if ( IO::arg('grab') )
 {
     try
     {
@@ -83,10 +94,10 @@ if ( IO::arg('state') & IO::STATE_1 )
     }
 }
 /*
- * STATE 2 - Prepare mobi from html and clean
+ * STATE 2 - mobi - Prepare mobi from html and clean
  * ----------------------------------
  */
-if ( IO::arg('state') & IO::STATE_2 )
+if ( IO::arg('mobi') )
 {
     try
     {
@@ -113,10 +124,10 @@ if ( IO::arg('state') & IO::STATE_2 )
 }
 
 /*
- * STATE 3 - Send by email to Kindle
+ * STATE 3 - send - Send by email to Kindle
  * ----------------------------------
  */
-if ( IO::arg('state') & IO::STATE_3 )
+if ( IO::arg('send') )
 {
     try
     {

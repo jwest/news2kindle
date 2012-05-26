@@ -22,12 +22,15 @@ class IO {
      */
     protected static $_args = array
     (
-        'state' => self::STATE_ALL,
-        'login' => NULL,        //--login=accountName@gmail.com
-        'password' => NULL,     //--password=PaSSw0rd1!
-        'maxitems' => 5,        //--maxitems=5
-        'timeout' => FALSE,     //--timeout=20 (in sec)
-        'setasread' => FALSE,   //--setasread=true
+        'help' => array('value' => FALSE, 'description' => 'show help for news2kindle'),
+        'grab' => array('value' => FALSE, 'description' => ''),
+        'mobi' => array('value' => FALSE, 'description' => ''),
+        'send' => array('value' => FALSE, 'description' => ''),
+        'login' => array('value' => NULL, 'description' => ''),
+        'password' => array('value' => NULL, 'description' => ''),
+        'maxitems' => array('value' => 5, 'description' => ''),
+        'timeout' => array('value' => FALSE, 'description' => ''),
+        'asread' => array('value' => FALSE, 'description' => ''),
     );
 
     /**
@@ -86,7 +89,7 @@ class IO {
      */
     public static function arg($name)
     {
-        return self::$_args[$name];
+        return self::$_args[$name]['value'];
     }
 
     /**
@@ -146,7 +149,12 @@ class IO {
 
         try
         {
-            self::$_args = array_merge( self::$_args, self::_validate_args($out) );
+            $args = self::_validate_args($out);
+
+            foreach ( $args as $key => $value )
+            {
+                self::$_args[$key]['value'] = $value;
+            }
         }
         catch(Exception $e)
         {
@@ -190,7 +198,7 @@ class IO {
 
         foreach ( self::$_args as $key => $arg )
         {
-            if( self::$_args[$key] === NULL AND !array_key_exists($key, $args) )
+            if( self::$_args[$key]['value'] === NULL AND !array_key_exists($key, $args) )
             {
                 throw new Exception('Param "'.$key.'" must be declared!');
             }
