@@ -15,6 +15,7 @@ require 'lib/api.php';
 require 'lib/images.php';
 require 'lib/storage.php';
 require 'lib/readability.php';
+require 'lib/MOBIClass/MOBI.php';
 
 IO::msg('News2Kindle - v.0.1');
 IO::msg('--------------------------------------------');
@@ -101,16 +102,60 @@ if ( IO::arg('mobi') )
 {
     try
     {
+        IO::command('Load prepared articles');
+        
+        $articles = $storage->get_contents();
+        
+        IO::ok();
+
+        IO::command('Prepare table of content');
+        
+        $toc = array();
+
+        foreach($articles as $article){
+            if(array_key_exists($article->website->title, $toc)){
+                $toc[$article->website->title]->articles[] = $article;             
+            }else{
+                $toc[$article->website->title] = (object)array(
+                    'articles' => array($article),
+                    'title' => $article->website->title,
+                    'streamId' => $article->website->streamId,
+                    'url' => $article->website->htmlUrl,
+                );
+            }           
+        }
+
+        IO::ok();
+
         IO::command('Render HTML');
-        //
+        
+        ob_start();
+        require 'data/' . IO::arg('html') . '.php';
+        $content = ob_get_contents();        
+        ob_end_clean();
+        
         IO::ok();
 
         IO::command('Prepare MOBI format');
-        //
-        IO::ok();
+        
+        $mobi = new MOBI(); 
+        $mobi->setData($content);
+        $mobi->setOptions(array( 
+            'title' => 'Articles from '.date('Y-m-d'), 
+            'author' => 'news2Kindle', 
+            'subject' => 'Articles from '.date('Y-m-d'),
+        ));
 
-        IO::command('Save result');
-        //
+        $images = array();
+
+        foreach ( $storage->info('images') as $n => $image )
+        {
+            $images[$n] = new FileRecord(new Record(file_get_contents($storage->get_path() . $image)));
+        }
+
+        $mobi->setImages($images);
+        $mobi->save( $storage->get_path() . 'articles-' . date('Y-m-d') . '.mobi');
+
         IO::ok();
 
         IO::command('Clean temporary files');

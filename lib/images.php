@@ -5,6 +5,9 @@
  */
 class Images {
 
+    /**
+     * JPER quality for resize
+     */
     const JPEG_QUALITY = 80;
 
     /**
@@ -112,7 +115,6 @@ class Images {
                 break;
         }
     }
-
 
     /**
      * Resize image

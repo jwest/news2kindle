@@ -49,6 +49,15 @@ class Storage {
     }
 
     /**
+     * Get path
+     * @return string path to repository
+     */
+    public function get_path()
+    {
+        return $this->_default_dir . $this->_name . '/';
+    }
+
+    /**
      * Get info about newspapper
      * @return array newspapper info
      */
@@ -69,6 +78,16 @@ class Storage {
         }
 
         return $content;
+    }
+
+    /**
+     * Get info key
+     * @param $key
+     * @return mixed
+     */
+    public function info($key)
+    {
+        return $this->_info->$key;
     }
 
     /**
@@ -149,7 +168,7 @@ class Storage {
      */
     public function get_contents()
     {
-        return unserialize( $this->_get_file('articles.dat') );
+        return unserialize( $this->_get_file( 'articles.dat' ) );
     }
 
     /**
@@ -181,6 +200,8 @@ class Storage {
         {
             return $default_file_content;
         }
+
+        return $content;
     }
 
 }

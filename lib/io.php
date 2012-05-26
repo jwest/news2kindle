@@ -11,11 +11,6 @@ class IO {
      */
     const COMMAND_LENGTH = 50;
 
-    const STATE_1 = 1;
-    const STATE_2 = 2;
-    const STATE_3 = 4;
-    const STATE_ALL = 7;
-
     /**
      * args for run screen
      * @var array
@@ -31,6 +26,7 @@ class IO {
         'maxitems' => array('value' => 5, 'description' => ''),
         'timeout' => array('value' => FALSE, 'description' => ''),
         'asread' => array('value' => FALSE, 'description' => ''),
+        'html' => array('value' => 'std', 'description' => ''),
     );
 
     /**
