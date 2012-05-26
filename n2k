@@ -27,71 +27,108 @@ IO::msg('');
  */
 
 IO::prepare_args($argv); //preapre args
+$storage = new Storage('static');
 
 /*
  * STATE 1 - Grab yours articles
  * ----------------------------------
  */
-try
+if ( IO::arg('state') & IO::STATE_1 )
 {
-    $storage = new Storage('static');
-
-    IO::command('Login to Google Reader API');
-    $api = new API(IO::arg('login'), IO::arg('password'));
-    IO::ok();
-
-    IO::command('Get ' . IO::arg('maxitems') . ' items from reader');
-    $items = $api->get_unread( IO::arg('maxitems') )->items;
-    IO::ok();
-
-    IO::msg('Start conversion for ' . count($items) . ' items:');
-
-    //prepare articles
-    foreach ( $items as $i => $item )
+    try
     {
-        IO::command( ($i+1) . '. item convert');
-
-        $file_url_content = @file_get_contents($item->alternate[0]->href);
-
-        $ra = new Readability2($file_url_content, 'utf-8');
-        $content = $ra->getContent();
-
-        $images = new Images($storage, $content['content']);
-        $content = $images->convert();
-
-        //save article
-        $storage->add_content
-        (
-            Utils::prepare_id($item->id), 
-            mb_convert_encoding($item->title, 'HTML-ENTITIES', 'utf-8'), 
-            $content, 
-            $item->alternate[0]->href, 
-            $item->origin
-        );
-
+        IO::command('Login to Google Reader API');
+        $api = new API(IO::arg('login'), IO::arg('password'));
         IO::ok();
+
+        IO::command('Get ' . IO::arg('maxitems') . ' items from reader');
+        $items = $api->get_unread( IO::arg('maxitems') )->items;
+        IO::ok();
+
+        IO::msg('Start conversion for ' . count($items) . ' items:');
+
+        //prepare articles
+        foreach ( $items as $i => $item )
+        {
+            IO::command( ($i+1) . '. item convert');
+
+            $file_url_content = @file_get_contents($item->alternate[0]->href);
+
+            $ra = new Readability2($file_url_content, 'utf-8');
+            $content = $ra->getContent();
+
+            $images = new Images($storage, $content['content']);
+            $content = $images->convert();
+
+            //save article
+            $storage->add_content
+            (
+                Utils::prepare_id($item->id), 
+                mb_convert_encoding($item->title, 'HTML-ENTITIES', 'utf-8'), 
+                $content, 
+                $item->alternate[0]->href, 
+                $item->origin
+            );
+
+            IO::ok();
+        }
+    }
+    catch(AutentificationException $e)
+    {
+        IO::error( $e->getMessage() );
+    }
+    catch(Exception $e)
+    {
+        IO::error( $e->getMessage() );
     }
 }
-catch(AutentificationException $e)
-{
-    IO::error( $e->getMessage() );
-}
-catch(Exception $e)
-{
-    IO::error( $e->getMessage() );
-}
-
 /*
- * STATE 2 - Prepare mobi from html
+ * STATE 2 - Prepare mobi from html and clean
  * ----------------------------------
  */
+if ( IO::arg('state') & IO::STATE_2 )
+{
+    try
+    {
+        IO::command('Render HTML');
+        //
+        IO::ok();
 
+        IO::command('Prepare MOBI format');
+        //
+        IO::ok();
+
+        IO::command('Save result');
+        //
+        IO::ok();
+
+        IO::command('Clean temporary files');
+        //
+        IO::ok();
+    }
+    catch(Exception $e)
+    {
+        IO::error( $e->getMessage() );
+    }
+}
 
 /*
  * STATE 3 - Send by email to Kindle
  * ----------------------------------
  */
-
+if ( IO::arg('state') & IO::STATE_3 )
+{
+    try
+    {
+        IO::command('Send newspapper');
+        //
+        IO::ok();
+    }
+    catch(Exception $e)
+    {
+        IO::error( $e->getMessage() );
+    }
+}
 
 IO::msg('');
 IO::msg('');

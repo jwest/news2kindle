@@ -11,12 +11,18 @@ class IO {
      */
     const COMMAND_LENGTH = 50;
 
+    const STATE_1 = 1;
+    const STATE_2 = 2;
+    const STATE_3 = 4;
+    const STATE_ALL = 7;
+
     /**
      * args for run screen
      * @var array
      */
     protected static $_args = array
     (
+        'state' => self::STATE_ALL,
         'login' => NULL,        //--login=accountName@gmail.com
         'password' => NULL,     //--password=PaSSw0rd1!
         'maxitems' => 5,        //--maxitems=5
@@ -149,7 +155,7 @@ class IO {
         }
 
         self::ok();
-        
+
         return true;
     }
 
