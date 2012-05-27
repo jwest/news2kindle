@@ -39,7 +39,10 @@ if ( IO::arg('help') )
 {
     IO::msg('Help:');
 
-    return;
+    foreach ( IO::get_help() as $arg => $help )
+    {
+        IO::msg( '-' . $arg[0] . ', --' . $arg . ' | ' . $help);
+    }
 }
 
 /*

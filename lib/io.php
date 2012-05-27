@@ -171,6 +171,16 @@ class IO {
      */
     private static function _validate_args($args)
     {
+        if( array_key_exists('help', $args) OR array_key_exists('h', $args) )
+        {
+            $args['grab'] = false;
+            $args['mobi'] = false;
+            $args['send'] = false;
+            $args['login'] = false;
+            $args['password'] = false;
+            $args['kindle'] = false;
+        }
+
         foreach ( $args as $key => $arg ) 
         {
             if ( strlen($key) === 1 )
@@ -201,6 +211,22 @@ class IO {
         }
 
         return $args;
+    }
+
+    /**
+     * Prepare help
+     * @return array
+     */
+    public static function get_help()
+    {
+        $output = array();
+
+        foreach ( self::$_args as $arg => $item )
+        {
+            $output[$arg] = $item['description'];
+        }
+
+        return $output;
     }
 
 }
