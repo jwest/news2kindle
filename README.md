@@ -1,5 +1,7 @@
 #news2kindle
 
+> This is one weekend project;) sorry for minor bugs and ugly style
+
 Grab your articles from Google Reader, download all articles (no RSS precontent) with photo and send before breakfast to your kindle.
 
 ## Getting started
