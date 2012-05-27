@@ -12,6 +12,7 @@
 require 'lib/utils.php';
 require 'lib/io.php';
 require 'lib/api.php';
+require 'lib/send.php';
 require 'lib/images.php';
 require 'lib/storage.php';
 require 'lib/readability.php';
@@ -191,8 +192,30 @@ if ( IO::arg('send') )
 {
     try
     {
-        IO::command('Send newspapper');
-        //
+        IO::command('Get mobi files to send');
+
+        $files = glob($storage->get_path(false).'*.mobi');        
+
+        IO::ok();
+
+        IO::command('Send newspappers');
+
+        $mail = new Send( IO::arg('kindle'), IO::arg('login') );
+
+        foreach ( $files as $file_mobi )
+        {
+            $mail->send( $file_mobi );
+        }
+
+        IO::ok();
+
+        IO::command('Delete sending newspappers');
+        
+        foreach ( $files as $file_mobi )
+        {
+            //unlink( $file_mobi );
+        }
+
         IO::ok();
     }
     catch(Exception $e)

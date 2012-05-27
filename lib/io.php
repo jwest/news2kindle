@@ -27,6 +27,7 @@ class IO {
         'timeout' => array('value' => FALSE, 'description' => ''),
         'asread' => array('value' => FALSE, 'description' => ''),
         'html' => array('value' => 'std', 'description' => ''),
+        'kindle' => array('value' => NULL, 'description' => ''),
     );
 
     /**
