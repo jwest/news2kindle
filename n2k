@@ -57,8 +57,8 @@ if ( IO::arg('grab') )
         $api = new API(IO::arg('login'), IO::arg('password'));
         IO::ok();
 
-        IO::command('Get ' . IO::arg('maxitems') . ' items from reader');
-        $items = $api->get_unread( IO::arg('maxitems') )->items;
+        IO::command('Get ' . IO::arg('items') . ' items from reader');
+        $items = $api->get_unread( IO::arg('items') )->items;
         IO::ok();
 
         if ( count($items) == 0 )
@@ -70,6 +70,8 @@ if ( IO::arg('grab') )
             IO::msg('Start conversion for ' . count($items) . ' items:');
         }
 
+        $only_rss = parse_ini_file( $storage->get_path(FALSE) . 'only_rss.ini' );
+
         //prepare articles
         foreach ( $items as $i => $item )
         {
@@ -77,10 +79,20 @@ if ( IO::arg('grab') )
 
             $file_url_content = @file_get_contents($item->alternate[0]->href);
 
-            $ra = new Readability2($file_url_content, 'utf-8');
-            $content = $ra->getContent();
+            $content = NULL;
 
-            $images = new Images($storage, $content['content']);
+            if (array_search($item->origin->htmlUrl, $only_rss['only_rss']) !== FALSE )
+            {
+                $content = isset($item->content) ? $item->content->content : $item->summary->content;
+            }
+            else
+            {
+                $ra = new Readability2($file_url_content, 'utf-8');
+                $content = $ra->getContent();
+                $content = $content['content'];
+            }
+
+            $images = new Images($storage, $content);
             $content = $images->convert();
 
             //save article
@@ -93,6 +105,7 @@ if ( IO::arg('grab') )
                 $item->origin
             );
 
+            //check as read
             $api->set_state($item->id);
 
             IO::ok();
@@ -142,11 +155,11 @@ if ( IO::arg('mobi') )
 
         IO::ok();
 
-        IO::command('Render HTML from template "' . IO::arg('html') . '"');
+        IO::command('Render HTML from template "' . IO::arg('render') . '"');
         
         ob_start();
         
-        require 'data/' . IO::arg('html') . '.php';
+        require 'data/' . IO::arg('render') . '.php';
         $content = ob_get_contents();        
         
         ob_end_clean();
@@ -172,7 +185,7 @@ if ( IO::arg('mobi') )
         }
 
         $mobi->setImages($images);
-        $mobi->save( $storage->get_path(false) . 'articles-' . date('Y-m-d') . '.mobi');
+        $mobi->save( $storage->get_path(FALSE) . 'articles-' . date('Y-m-d') . '.mobi');
 
         IO::ok();
 
@@ -197,7 +210,7 @@ if ( IO::arg('send') )
     {
         IO::command('Get mobi files to send');
 
-        $files = glob($storage->get_path(false).'*.mobi');        
+        $files = glob($storage->get_path(FALSE).'*.mobi');        
 
         IO::ok();
 
@@ -216,7 +229,7 @@ if ( IO::arg('send') )
         
         foreach ( $files as $file_mobi )
         {
-            //unlink( $file_mobi );
+            unlink( $file_mobi );
         }
 
         IO::ok();
