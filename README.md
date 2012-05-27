@@ -1,4 +1,4 @@
-#cooming soon...
+#news2kindle
 
 Grab your articles from Google Reader, download all articles (no RSS precontent) with photo and send before breakfast to your kindle.
 
