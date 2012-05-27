@@ -18,16 +18,15 @@ class IO {
     protected static $_args = array
     (
         'help' => array('value' => FALSE, 'description' => 'show help for news2kindle'),
-        'grab' => array('value' => FALSE, 'description' => ''),
-        'mobi' => array('value' => FALSE, 'description' => ''),
-        'send' => array('value' => FALSE, 'description' => ''),
-        'login' => array('value' => NULL, 'description' => ''),
-        'password' => array('value' => NULL, 'description' => ''),
-        'maxitems' => array('value' => 5, 'description' => ''),
-        'timeout' => array('value' => FALSE, 'description' => ''),
-        'asread' => array('value' => FALSE, 'description' => ''),
-        'html' => array('value' => 'std', 'description' => ''),
-        'kindle' => array('value' => NULL, 'description' => ''),
+        'grab' => array('value' => FALSE, 'description' => 'grab articles from google reader'),
+        'mobi' => array('value' => FALSE, 'description' => 'prepare mobi format'),
+        'send' => array('value' => FALSE, 'description' => 'send articles to kindle'),
+        'login' => array('value' => NULL, 'description' => 'your login to google account *requred'),
+        'password' => array('value' => NULL, 'description' => 'your password to google account *required'),
+        'kindle' => array('value' => NULL, 'description' => 'your kindle email *required'),
+        'items' => array('value' => 5, 'description' => 'max items to grab in run'),        
+        'render' => array('value' => 'std', 'description' => 'name of html template for newspapper'),
+        //'timeout' => array('value' => FALSE, 'description' => 'timeout is most important than items count'),
     );
 
     /**

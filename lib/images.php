@@ -59,10 +59,10 @@ class Images {
      */
     public function convert()
     {
-        foreach ( $this->_images_from_content as $n => $image )
+        foreach ( $this->_images_from_content as $n => $image_url )
         {
-            $image = $this->_get_image($image);
-            $this->_content = str_replace($image, '" recindex="'.(int)basename($image), $this->_content);
+            $image = $this->_get_image($image_url);
+            $this->_content = str_replace($image_url, '" recindex="'.(int)basename($image), $this->_content);
         }
 
         return $this->_content;
