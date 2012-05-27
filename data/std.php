@@ -7,7 +7,7 @@
         <p>
             <a name="start" /></a>
             <h1 id="start">
-                Articles <?php echo date('Y.m.d').' - ~'; ?>
+                Articles <?php echo date('Y.m.d') . ' - ' . $articles_count; ?>
             </h1>
         </p>
 

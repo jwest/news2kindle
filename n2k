@@ -28,7 +28,7 @@ IO::msg('');
  */
 
 IO::prepare_args($argv); //preapre args
-$storage = new Storage('static');
+$storage = new Storage('static'); //prepare newspapper
 
 /*
  * HELP - help - show help
@@ -57,7 +57,14 @@ if ( IO::arg('grab') )
         $items = $api->get_unread( IO::arg('maxitems') )->items;
         IO::ok();
 
-        IO::msg('Start conversion for ' . count($items) . ' items:');
+        if ( count($items) == 0 )
+        {
+            IO::msg('Items not exists!');
+        }
+        else
+        {
+            IO::msg('Start conversion for ' . count($items) . ' items:');
+        }
 
         //prepare articles
         foreach ( $items as $i => $item )
@@ -82,6 +89,8 @@ if ( IO::arg('grab') )
                 $item->origin
             );
 
+            $api->set_state($item->id);
+
             IO::ok();
         }
     }
@@ -94,6 +103,7 @@ if ( IO::arg('grab') )
         IO::error( $e->getMessage() );
     }
 }
+
 /*
  * STATE 2 - mobi - Prepare mobi from html and clean
  * ----------------------------------
@@ -111,6 +121,7 @@ if ( IO::arg('mobi') )
         IO::command('Prepare table of content');
         
         $toc = array();
+        $articles_count = count($articles);
 
         foreach($articles as $article){
             if(array_key_exists($article->website->title, $toc)){
@@ -127,11 +138,13 @@ if ( IO::arg('mobi') )
 
         IO::ok();
 
-        IO::command('Render HTML');
+        IO::command('Render HTML from template "' . IO::arg('html') . '"');
         
         ob_start();
+        
         require 'data/' . IO::arg('html') . '.php';
         $content = ob_get_contents();        
+        
         ob_end_clean();
         
         IO::ok();
@@ -148,19 +161,21 @@ if ( IO::arg('mobi') )
 
         $images = array();
 
+        //prepare images for mobi format
         foreach ( $storage->info('images') as $n => $image )
         {
             $images[$n] = new FileRecord(new Record(file_get_contents($storage->get_path() . $image)));
         }
 
         $mobi->setImages($images);
-        $mobi->save( $storage->get_path() . 'articles-' . date('Y-m-d') . '.mobi');
+        $mobi->save( $storage->get_path(false) . 'articles-' . date('Y-m-d') . '.mobi');
 
         IO::ok();
 
         IO::command('Clean temporary files');
-        //
+        $storage->clean();
         IO::ok();
+
     }
     catch(Exception $e)
     {
@@ -186,5 +201,4 @@ if ( IO::arg('send') )
     }
 }
 
-IO::msg('');
-IO::msg('');
+IO::msg("END.\n");

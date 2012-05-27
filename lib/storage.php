@@ -50,11 +50,19 @@ class Storage {
 
     /**
      * Get path
+     * @param bool $newspapper path to newspapper
      * @return string path to repository
      */
-    public function get_path()
+    public function get_path($newspapper = true)
     {
-        return $this->_default_dir . $this->_name . '/';
+        $path = $this->_default_dir;
+
+        if ( $newspapper ) 
+        {
+            $path .= $this->_name . '/';
+        }
+
+        return $path;
     }
 
     /**
@@ -202,6 +210,21 @@ class Storage {
         }
 
         return $content;
+    }
+
+    /**
+     * Clean newspapper after convert to mobi
+     */
+    public function clean()
+    {
+        $files_to_remove = glob($this->_default_dir . $this->_name . '/*');
+
+        foreach ( $files_to_remove as $file )
+        {
+            unlink( $file );
+        }
+
+        rmdir( $this->_default_dir . $this->_name );
     }
 
 }
