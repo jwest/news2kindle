@@ -5,16 +5,19 @@ Grab your articles from Google Reader, download all articles (no RSS precontent)
 ## Getting started
 For example:
 
-php ./n2k -l={google account}@gmail.com -p={your password} -k={amazon account}@kindle.com -i=3 -g
+    php ./n2k help
+ - show help
+
+    php ./n2k -l={google account}@gmail.com -p={your password} -k={amazon account}@kindle.com -i=3 -g
  - Get 3 items from google reader and save
 
-php ./n2k -l={google account}@gmail.com -p={your password} -k={amazon account}@kindle.com -m
+    php ./n2k -l={google account}@gmail.com -p={your password} -k={amazon account}@kindle.com -m
  - Prepared mobi format and clean temporary files
 
-php ./n2k -l={google account}@gmail.com -p={your password} -k={amazon account}@kindle.com -m -r={template name}
+    php ./n2k -l={google account}@gmail.com -p={your password} -k={amazon account}@kindle.com -m -r={template name}
  - Prepared mobi format with other template (you must give name) and clean temporary files
 
-php ./n2k -l={google account}@gmail.com -p={your password} -k={amazon account}@kindle.com -s
+    php ./n2k -l={google account}@gmail.com -p={your password} -k={amazon account}@kindle.com -s
  - Send to kindle email and remove newspapper from drive
 
 ## SetUp CRON
