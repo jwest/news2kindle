@@ -28,8 +28,8 @@ IO::msg('');
  * ----------------------------------
  */
 
-IO::prepare_args($argv); //preapre args
 $storage = new Storage('static'); //prepare newspapper
+IO::prepare_args($argv, $storage->get_path(FALSE)); //preapre args
 
 /*
  * HELP - help - show help

@@ -24,7 +24,7 @@ class IO {
         'login' => array('value' => NULL, 'description' => 'your login to google account *requred'),
         'password' => array('value' => NULL, 'description' => 'your password to google account *required'),
         'kindle' => array('value' => NULL, 'description' => 'your kindle email *required'),
-        'items' => array('value' => 5, 'description' => 'max items to grab in run'),        
+        'items' => array('value' => 100, 'description' => 'max items to grab in run'),        
         'render' => array('value' => 'std', 'description' => 'name of html template for newspapper'),
         //'timeout' => array('value' => FALSE, 'description' => 'timeout is most important than items count'),
     );
@@ -89,14 +89,32 @@ class IO {
     }
 
     /**
+     * Get config from ini
+     * @param string $path
+     * @return void
+     */
+    protected static function _get_config($path)
+    {
+        $config = parse_ini_file( $path . 'config.ini' );
+
+        foreach($config as $key => $value)
+        {
+            self::$_args[$key]['value'] = $value;
+        }
+    }
+
+    /**
      * Prepare args for script
      * (from http://php.net/manual/en/features.commandline.php)
      * @param array $argv array
+     * @param string $path
      * @return bool success or error
      */
-    public static function prepare_args($argv)
+    public static function prepare_args($argv, $path)
     {
         self::command('Parse args');
+
+        self::_get_config($path);
 
         array_shift($argv);
         $out = array();
